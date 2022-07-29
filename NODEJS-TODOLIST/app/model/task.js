@@ -21,7 +21,45 @@ const createTask = (title, description) => {
   return newTask;
 };
 
+const readDetaildTask = (id) => {
+  let taskList = readAllTask();
+  const task = taskList.find((task) => id === task.id);
+  return task;
+};
+
+const updateTask = (id, title, description) => {
+  let taskList = readAllTask();
+  const index = taskList.findIndex((task) => task.id === id);
+  if (index != -1) {
+    // thực hiện update
+    const oldTask = taskList[index];
+    const newTask = { ...oldTask, title, description };
+    taskList[index] = newTask;
+    fs.writeFileSync("task.json", JSON.stringify(taskList));
+    return newTask;
+  } else {
+    // thông báo cho người dùng biết
+    return false;
+  }
+};
+
+const deleteTask = (id) => {
+  let taskList = readAllTask();
+  const index = taskList.findIndex((task) => task.id === id);
+  if (index !== -1) {
+    const task = taskList[index];
+    taskList = taskList.filter((task) => task.id !== id);
+    fs.writeFileSync("task.json", JSON.stringify(taskList));
+    return task;
+  } else {
+    return false;
+  }
+};
+
 module.exports = {
   readAllTask,
   createTask,
+  readDetaildTask,
+  updateTask,
+  deleteTask,
 };

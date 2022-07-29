@@ -2,7 +2,14 @@
 
 const yargs = require("yargs"); //es5 (common js)
 const fs = require("fs"); //file system (build in nodejs)
-const { readAllTask, createTask } = require("./model/task");
+const chalk = require("chalk");
+const {
+  readAllTask,
+  createTask,
+  readDetaildTask,
+  updateTask,
+  deleteTask,
+} = require("./model/task");
 
 // tạo lệnh test
 // node app/index.js test
@@ -42,14 +49,25 @@ yargs.command({
   },
   handler: () => {
     const result = readAllTask();
-    console.log("taskJson :", result);
+    console.log(chalk.blue("taskJson :"), result);
   },
 });
-//read-detaild app/index.js read-detaild
+//read-detaild app/index.js read-detaild --id="1"
 yargs.command({
   command: "read-detaild",
-  handler: () => {
-    console.log("read-detaild");
+  builder: {
+    id: {
+      type: "string",
+    },
+  },
+  handler: (args) => {
+    const { id } = args;
+    const task = readDetaildTask(id);
+    if (task) {
+      console.log("task :", task);
+    } else {
+      console.log("not found!");
+    }
   },
 });
 //update node app/index.js update --id=1 --title="Học Nodejs" --description="Học NodeJS dễ lắm"
@@ -68,8 +86,14 @@ yargs.command({
   },
   handler: (args) => {
     const { id, title, description } = args;
-    console.log("id,title,description : " + id, title, description);
-    console.log("update");
+    const task = updateTask(id, title, description);
+    console.log(task);
+    debugger;
+    if (task) {
+      console.log("task update : ", task);
+    } else {
+      console.log("Not Found!");
+    }
   },
 });
 //delete app/index.js delete
@@ -82,8 +106,12 @@ yargs.command({
   },
   handler: (args) => {
     const { id } = args;
-    console.log("id :" + id);
-    console.log("delete");
+    const task = deleteTask(id);
+    if (task) {
+      console.log("delete task : ", task);
+    } else {
+      console.log("Not Found!");
+    }
   },
 });
 

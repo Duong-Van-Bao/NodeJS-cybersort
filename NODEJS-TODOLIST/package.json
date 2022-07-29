@@ -15,6 +15,7 @@
     "nodemon": "^2.0.19"
   },
   "dependencies": {
+    "chalk": "4.1.2",
     "yargs": "^17.5.1"
   }
 }
